@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Examples</title>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h1>WebSocket chat with server </h1>
+          <div id="log" style="height: 300px;overflow-y: scroll;border: 1px solid #CCC;">
+          </div>
+          <div>
+                <p>
+                   <button class="btn btn-primary" onclick="send();">Push数据</button>
+                </p>            
+          </div>
+</body>
+      <script type="text/javascript">
+         var sock = null;
+         var wsuri = "ws://localhost:8080/ws";
+         var page = 0;
+         window.onload = function() {
+            console.log("onload");
+            try
+            {
+                sock = new WebSocket(wsuri);
+            }catch (e) {
+                alert(e.Message);
+            }                      
+            sock.onopen = function() {
+               console.log("connected to " + wsuri);
+            }          
+            sock.onerror = function(e) {
+               console.log(" error from connect " + e);
+            }           
+            sock.onclose = function(e) {
+               console.log("connection closed (" + e.code + ")");
+            }
+            sock.onmessage = function(e) {   
+               $('#log').append(e.data);              
+               // send();
+            }
+            
+         };
+
+         function send() {
+         	page += 1;
+            sock.send(page);
+         };
+      </script>
+</html>
